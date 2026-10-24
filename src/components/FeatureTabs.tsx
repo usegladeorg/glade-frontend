@@ -27,9 +27,23 @@ export function FeatureTabs({ tabs }: { tabs: FeatureTab[] }) {
       const id = window.location.hash.slice(1);
       if (tabs.some((t) => t.id === id)) setActive(id);
     };
+    // Next's <Link> updates the URL with pushState, which never fires
+    // `hashchange`, so also catch clicks on any link pointing at a tab.
+    const fromClick = (e: MouseEvent) => {
+      const link = (e.target as Element | null)?.closest?.("a[href]");
+      if (!link) return;
+      const url = new URL(link.getAttribute("href")!, window.location.href);
+      if (url.pathname !== window.location.pathname) return;
+      const id = url.hash.slice(1);
+      if (tabs.some((t) => t.id === id)) setActive(id);
+    };
     fromHash();
     window.addEventListener("hashchange", fromHash);
-    return () => window.removeEventListener("hashchange", fromHash);
+    document.addEventListener("click", fromClick);
+    return () => {
+      window.removeEventListener("hashchange", fromHash);
+      document.removeEventListener("click", fromClick);
+    };
   }, [tabs]);
 
   const current = tabs.find((t) => t.id === active) ?? tabs[0];
