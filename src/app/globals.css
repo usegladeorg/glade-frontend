@@ -491,9 +491,21 @@
   background: radial-gradient(ellipse 50% 50% at 50% 100%, rgba(var(--sx-sun), 0.4), transparent 70%);
   filter: blur(10px);
 }
-/* Drifting pollen and sun motes */
+/* Drifting pollen and sun motes. The dots live on a pseudo-element that
+   moves with transform, so the drift runs on the compositor instead of
+   repainting the section every frame. The pattern tiles every 1200x900, so
+   rising by exactly one tile height loops without a seam. */
 .sx-stars {
   pointer-events: none;
+  overflow: hidden;
+}
+.sx-stars::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: -900px;
   background-image:
     radial-gradient(3px 3px at 12% 18%, rgba(84, 231, 164, 0.7), transparent 60%),
     radial-gradient(2px 2px at 27% 62%, rgba(255, 214, 120, 0.8), transparent 60%),
@@ -508,9 +520,10 @@
     radial-gradient(2px 2px at 51% 52%, rgba(255, 255, 255, 0.9), transparent 60%),
     radial-gradient(2.5px 2.5px at 18% 77%, rgba(47, 181, 126, 0.45), transparent 60%);
   background-size: 1200px 900px;
+  will-change: transform;
   animation: sx-drift 60s linear infinite;
 }
-@keyframes sx-drift { from { background-position: 0 0; } to { background-position: 120px -900px; } }
+@keyframes sx-drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, -900px, 0); } }
 
 /* ── Labels, tags, status ───────────────────────────────────────────────── */
 .sx-tag {
@@ -674,7 +687,7 @@ select.sx-input { appearance: none; padding-right: 36px;
 @keyframes sx-rays { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.85; } }
 .sx-rays { animation: sx-rays 8s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
-  .sx-rise, .sx-marquee, .sx-stars, .sx-sway, .sx-rays { animation: none; }
+  .sx-rise, .sx-marquee, .sx-stars::before, .sx-sway, .sx-rays { animation: none; }
   .sx-reveal { opacity: 1; transform: none; transition: none; }
   .sx-dot-live { animation: none; }
 }
