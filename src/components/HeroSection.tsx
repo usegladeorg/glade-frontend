@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { Arrow } from "@/components/sx";
+import { TokenBadge } from "@/components/TokenBadge";
 
 
 /* The hero is centered copy over the valley photograph, with a "canopy
@@ -37,6 +38,10 @@ export function HeroSection() {
       <div aria-hidden="true" className="absolute inset-0 sx-stars" style={{ opacity: 0.7 }} />
 
       <div className="sx-container relative" style={{ textAlign: "center" }}>
+        <div className="sx-rise flex justify-center" style={{ marginBottom: 28 }}>
+          <TokenBadge />
+        </div>
+
         <h1
           className="sx-display sx-rise sx-d1"
           style={{ margin: "0 auto", maxWidth: 1080, fontSize: "clamp(44px, 7vw, 108px)", lineHeight: 0.98 }}
