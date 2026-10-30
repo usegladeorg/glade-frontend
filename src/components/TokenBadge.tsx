@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export const GLADE_TOKEN_ADDRESS = "0x793f20efd5f385e9ce77777b0bf1d1054e0a9855";
+export const GLADE_TOKEN_ADDRESS = "";
 
 
 /** Token badge for the hero: the ticker and the full contract address, copied with one click. */
